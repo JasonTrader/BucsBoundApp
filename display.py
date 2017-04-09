@@ -1,33 +1,38 @@
-from Tkinter import *
-import Image
+import Tkinter as tk
 
-root = Tk()
+def inc_label(name, username, msg, followers, holding):
+  def count():
+    if not holding:
+          f = open('in', 'r+')
+          lines = f.read().splitlines()
+          for line in lines:
+            holding.append(line.split(','))
+          f.truncate(0)
+          f.close()
+    if holding:
+      temp = holding.pop(0)
+      name.config(text=temp[0])
+      username.config(text=temp[1])
+      msg.config(text=temp[2])
+      followers.config(text="Number of followers: " + temp[3])
+      name.after(10000, count)
+    else:
+      name.after(100, count)
+  count()
 
-text1 = Text(root, height=200, width=100)
-photo=PhotoImage(file='test.gif')
-text1.insert(END,'\n')
-text1.image_create(END, image=photo)
 
-text1.pack(side=LEFT)
+main = tk.Tk()
+main.title("Display")
+name = tk.Label(main, fg="black")
+name.pack()
+username = tk.Label(main, fg="black")
+username.pack()
+msg = tk.Label(main, fg="black")
+msg.pack()
+followers = tk.Label(main, fg="black")
+followers.pack()
 
-text2 = Text(root, height=200, width=100)
-scroll = Scrollbar(root, command=text2.yview)
-text2.configure(yscrollcommand=scroll.set)
-text2.tag_configure('bold_italics', font=('Arial', 12, 'bold', 'italic'))
-text2.tag_configure('big', font=('Verdana', 20, 'bold'))
-text2.tag_configure('color', foreground='#476042', 
-                        font=('Tempus Sans ITC', 12, 'bold'))
-text2.tag_bind('follow', '<1>', lambda e, t=text2: t.insert(END, "Not now, maybe later!"))
-text2.insert(END,'\nWilliam Shakespeare\n', 'big')
-quote = """
-To be, or not to be that is the question:
-Whether 'tis Nobler in the mind to suffer
-The Slings and Arrows of outrageous Fortune,
-Or to take Arms against a Sea of troubles,
-"""
-text2.insert(END, quote, 'color')
-text2.insert(END, 'follow-up\n', 'follow')
-text2.pack(side=LEFT)
-scroll.pack(side=RIGHT, fill=Y)
-
-root.mainloop()
+inc_label(name, username, msg, followers, [])
+button = tk.Button(main, text='Stop', width=25, command=main.destroy)
+button.pack()
+main.mainloop()
