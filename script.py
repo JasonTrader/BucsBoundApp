@@ -1,4 +1,4 @@
-
+import json
 import tweepy
 from tweepy import OAuthHandler
 
@@ -7,7 +7,7 @@ import config
 class MyStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
-        print status.text
+        print status.author.profile_image_url_https
 
     def on_error(self, status_code):
         print status_code
